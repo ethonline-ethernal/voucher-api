@@ -14,70 +14,106 @@ const factory = new ethers.Contract(
   wallet
 );
 
-app.get("/address/:name", (req, res) => {
-  const result = factory
-    .getVoucherAddress(req.params["name"])
-    .then((address) => {
-      res.send(req.params["name"] + " Voucher Address : " + address);
-    });
-});
-
 app.post("/mint/:name/:address", (req, res) => {
-  const result = factory
-    .getVoucherAddress(req.params["name"])
-    .then((address) => {
-      const Voucher = new ethers.Contract(address, Voucher_abi, wallet);
-      async function mint() {
-        const tx = await Voucher.mint(req.params["address"]);
-        res.send("Transaction hash :" + tx.hash);
-      }
-      mint();
-    });
+  try {
+    const result = factory
+      .getVoucherAddress(req.params["name"])
+      .then((address) => {
+        const Voucher = new ethers.Contract(address, Voucher_abi, wallet);
+        async function mint() {
+          let tx = undefined;
+          try {
+            tx = await Voucher.mint(req.params["address"]);
+          } catch (error) {
+            res.status(500).send(e);
+          }
+          if (tx != undefined) {
+            res.send("Transaction hash :" + tx.hash);
+          }
+        }
+        mint();
+      });
+  } catch (e) {
+    res.status(500).send(e);
+  }
 });
 
 app.post("/redeem/:name/:address", (req, res) => {
-  const result = factory
-    .getVoucherAddress(req.params["name"])
-    .then((address) => {
-      const Voucher = new ethers.Contract(address, Voucher_abi, wallet);
-      async function redeem() {
-        const tx = await Voucher.redeem(req.params["address"]);
-        res.send("Transaction hash :" + tx.hash);
-      }
-      redeem();
-    });
+  try {
+    const result = factory
+      .getVoucherAddress(req.params["name"])
+      .then((address) => {
+        const Voucher = new ethers.Contract(address, Voucher_abi, wallet);
+        async function redeem() {
+          let tx = undefined;
+          try {
+            tx = await Voucher.redeem(req.params["address"]);
+          } catch (e) {
+            res.status(500).send(e);
+          }
+          if (tx !== undefined) {
+            res.send("Transaction hash :" + tx.hash);
+          }
+        }
+        redeem();
+      });
+  } catch (e) {
+    res.status(500).send(e);
+  }
 });
 
 app.post("/mint/:name/:address/:tokenid", (req, res) => {
-  const result = factory
-    .getVoucherAddress(req.params["name"])
-    .then((address) => {
-      const Voucher = new ethers.Contract(address, Tokengated_abi, wallet);
-      async function mint() {
-        const tx = await Voucher.mint(
-          req.params["address"],
-          req.params["tokenid"]
-        );
-        res.send("Transaction hash :" + tx.hash);
-      }
-      mint();
-    });
+  try {
+    const result = factory
+      .getVoucherAddress(req.params["name"])
+      .then((address) => {
+        const Voucher = new ethers.Contract(address, Tokengated_abi, wallet);
+        async function mint() {
+          let tx = undefined;
+          try {
+            tx = await Voucher.mint(
+              req.params["address"],
+              req.params["tokenid"]
+            );
+          } catch (e) {
+            res.status(500).send(e);
+          }
+          if (tx != undefined) {
+            res.send("Transaction hash :" + tx.hash);
+          }
+        }
+        mint();
+      });
+  } catch (e) {
+    res.status(500).send(e);
+  }
 });
 
 app.post("/redeem/:name/:address/:tokenid", (req, res) => {
-  const result = factory
-    .getVoucherAddress(req.params["name"])
-    .then((address) => {
-      const Voucher = new ethers.Contract(address, Tokengated_abi, wallet);
-      async function redeem() {
-        const tx = await Voucher.redeem(
-          req.params["address"],
-          req.params["tokenid"]
-        );
-        res.send("Transaction hash :" + tx.hash);
-      }
-      redeem();
-    });
+  try {
+    const result = factory
+      .getVoucherAddress(req.params["name"])
+      .then((address) => {
+        const Voucher = new ethers.Contract(address, Tokengated_abi, wallet);
+        async function redeem() {
+          let tx = undefined;
+          try {
+            tx = await Voucher.redeem(
+              req.params["address"],
+              req.params["tokenid"]
+            );
+          } catch (e) {
+            res.status(500).send(e);
+          }
+          if (tx != undefined) {
+            res.send("Transaction hash :" + tx.hash);
+          }
+        }
+        redeem();
+      });
+  } catch (e) {
+    res.status(500).send(e);
+  }
 });
 
 app.listen(3000, () => {
