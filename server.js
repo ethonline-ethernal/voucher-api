@@ -43,17 +43,24 @@ app.post("/mint/:name/:address", (req, res) => {
           let tx = undefined;
           try {
             tx = await Voucher.mint(req.params["address"]);
+            console.log("---------------------------------------");
+            console.log("MINT => ", req.params["name"]);
+            console.log("TO => ", req.params["address"]);
+            console.log("TX LOGS => ", tx.hash);
           } catch (error) {
-            res.status(500).send(e);
+            console.log("MINT ERROR => " + req.params["address"]);
+            return res.status(500).send(error);
           }
           if (tx != undefined) {
-            res.send("Transaction hash :" + tx.hash);
+            return res
+              .status(200)
+              .json({ status: 200, message: "MINT Success", tx: tx.hash });
           }
         }
         mint();
       });
   } catch (e) {
-    res.status(500).send(e);
+    return res.status(500).send(e);
   }
 });
 
@@ -67,11 +74,18 @@ app.post("/redeem/:name/:address", (req, res) => {
           let tx = undefined;
           try {
             tx = await Voucher.redeem(req.params["address"]);
+            console.log("---------------------------------------");
+            console.log("REDEEN => ", req.params["name"]);
+            console.log("ADDR => ", req.params["address"]);
+            console.log("TX LOGS => ", tx.hash);
           } catch (e) {
-            res.status(500).send(e);
+            console.log("REDEEM ERROR => " + req.params["address"]);
+            return res.status(500).send(error);
           }
           if (tx !== undefined) {
-            res.send("Transaction hash :" + tx.hash);
+            return res
+              .status(200)
+              .json({ status: 200, message: "REDEEM Success", tx: tx.hash });
           }
         }
         redeem();
@@ -95,10 +109,12 @@ app.post("/mint/:name/:address/:tokenid", (req, res) => {
               req.params["tokenid"]
             );
           } catch (e) {
-            res.status(500).send(e);
+            return res.status(500).send(e);
           }
           if (tx != undefined) {
-            res.send("Transaction hash :" + tx.hash);
+            return res
+              .status(200)
+              .json({ status: 200, message: "MINT Success", tx: tx.hash });
           }
         }
         mint();
@@ -122,10 +138,12 @@ app.post("/redeem/:name/:address/:tokenid", (req, res) => {
               req.params["tokenid"]
             );
           } catch (e) {
-            res.status(500).send(e);
+            return res.status(500).send(e);
           }
           if (tx != undefined) {
-            res.send("Transaction hash :" + tx.hash);
+            return res
+              .status(200)
+              .json({ status: 200, message: "REDEEM Success", tx: tx.hash });
           }
         }
         redeem();
