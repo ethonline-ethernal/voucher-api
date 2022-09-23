@@ -4,6 +4,7 @@ import Voucher_abi from "./voucher_abi.json" assert { type: "json" };
 import Tokengated_abi from "./tokengated_abi.json" assert { type: "json" };
 import express from "express";
 import { ethers } from "ethers";
+import cors from "cors";
 
 const app = express();
 const provider = new ethers.providers.JsonRpcProvider(config.rpc.url);
@@ -12,6 +13,24 @@ const factory = new ethers.Contract(
   config.contracts.factory.address,
   Factory_abi,
   wallet
+);
+
+/**CORS SETTING */
+var allowedOrigins = ["http://localhost:3000", "https://ethernal.vercel.app"];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        var msg =
+          "The CORS policy for this site does not " +
+          "allow access from the specified Origin.";
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
+  })
 );
 
 app.post("/mint/:name/:address", (req, res) => {
