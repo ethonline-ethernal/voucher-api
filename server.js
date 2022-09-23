@@ -80,7 +80,7 @@ app.post("/redeem/:name/:address", (req, res) => {
             console.log("TX LOGS => ", tx.hash);
           } catch (e) {
             console.log("REDEEM ERROR => " + req.params["address"]);
-            return res.status(500).send(error);
+            return res.status(500).send(e);
           }
           if (tx !== undefined) {
             return res
